@@ -1,0 +1,27 @@
+GetNewFactIntent wann ist der nächste Feiertag
+GetNewFactIntent wann ist der nächste Urlaub
+GetNewFactIntent wann ist der folgende Feiertag
+GetNewFactIntent wann ist der folgende Urlaub
+GetNewFactIntent wann ist der Feiertag
+GetNewFactIntent wann ist der Urlaub
+GetNewFactIntent ein Feiertag
+GetNewFactIntent ein Urlaub
+GetNewFactIntent sage mir der nächste Feiertag
+GetNewFactIntent sage mir der nächste Urlaub
+GetNewFactIntent sage mir der folgende Feiertag
+GetNewFactIntent sage mir der folgende Urlaub
+GetNewFactIntent gib mir das Datum des nächsten Feiertags
+GetNewFactIntent gib mir das Datum des nächsten Urlaubs
+GetNewFactIntent gib mir das Datum des folgenden Urlaubs
+GetNewFactIntent gib mir das Datum des folgenden Feiertags
+GetNewFactIntent erzähle mir von dem nächsten Feiertag
+GetNewFactIntent erzähle mir von dem nächsten Urlaub
+GetNewFactIntent erzähle mir von dem folgenden Feiertag
+GetNewFactIntent erzähle mir von dem folgenden Urlaub
+GetNewFactIntent sage mir das Datum
+GetNewFactIntent gib mir Informationen
+GetNewFactIntent gib mir das Datum
+GetNewFactIntent sage mir etwas
+GetNewFactIntent erzähle mir etwas
+GetNewFactIntent sage mir wann
+GetNewFactIntent erzähle mir wann

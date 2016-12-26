@@ -1,0 +1,21 @@
+{
+    "name": "jacobs-holidays-for-alexa",
+    "version": "1.0.0",
+    "private": true,
+    "description": "I18n version of fact skill.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "alexa",
+        "skill",
+        "fact",
+        "holidays"
+    ],
+    "author": "Jakub Horák",
+    "license": "MIT",
+    "dependencies": {
+        "alexa-sdk": "^1.0.6"
+    }
+}

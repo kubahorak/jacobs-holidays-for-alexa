@@ -1,0 +1,16 @@
+= Jacob's quotes for Amazon Alexa
+
+Says one of top 100 Reddit quotes using Amazon Alexa voice service.
+Implemented as an Alexa skill.
+Uses Amazon Lambda service.
+
+== Installation
+
+    cd src
+    npm install
+    zip -r pkg.zip index.js node_modules
+
+Then upload the `pkg.zip` to the AWS Lambda function code.
+Otherwise follow https://github.com/alexa/skill-sample-nodejs-fact[Alexa tutorial].
+
+(C) 2016 Jakub Horák
