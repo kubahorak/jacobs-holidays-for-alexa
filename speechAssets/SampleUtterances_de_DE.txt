@@ -4,6 +4,8 @@ GetNewFactIntent wann ist der folgende Feiertag
 GetNewFactIntent wann ist der folgende Urlaub
 GetNewFactIntent wann ist der Feiertag
 GetNewFactIntent wann ist der Urlaub
+GetNewFactIntent wann ist der nächste
+GetNewFactIntent wann der nächste ist
 GetNewFactIntent ein Feiertag
 GetNewFactIntent ein Urlaub
 GetNewFactIntent sage mir der nächste Feiertag

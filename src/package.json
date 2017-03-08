@@ -16,6 +16,7 @@
     "author": "Jakub Horák",
     "license": "MIT",
     "dependencies": {
-        "alexa-sdk": "^1.0.6"
+        "alexa-sdk": "^1.0.6",
+        "request": "^2.80.0"
     }
 }
