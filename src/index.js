@@ -12,29 +12,30 @@
 
 const Alexa = require('alexa-sdk');
 const Request = require('request');
+const DateFormat = require('dateformat');
 
 const APP_ID = 'amzn1.ask.skill.ce8ae59b-efe3-4c0b-a55c-3c83fdc9aeb3';
 
 const amznProfileUrlBase = 'https://api.amazon.com/user/profile?access_token=';
 
 const regions = {
-    'Deutschland':            '14. April',
-    'Baden-Württemberg':      '14. April',
-    'Bayern':                 '14. April',
-    'Berlin':                 '14. April',
-    'Brandenburg':            '14. April',
-    'Bremen':                 '14. April',
-    'Hamburg':                '14. April',
-    'Hessen':                 '14. April',
-    'Mecklenburg-Vorpommern': '14. April',
-    'Niedersachsen':          '14. April',
-    'Nordrhein-Westfalen':    '14. April',
-    'Rheinland-Pfalz':        '14. April',
-    'Saarland':               '14. April',
-    'Sachsen':                '14. April',
-    'Sachsen-Anhalt':         '14. April',
-    'Schleswig-Holstein':     '14. April',
-    'Thüringen':              '14. April',
+    'Deutschland':             ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '03.10.', '25.12.', '26.12.'],
+    'Baden-Württemberg':       ['01.01.', '06.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '15.06.', '03.10.', '01.11.', '25.12.', '26.12.'],
+    'Bayern':                  ['01.01.', '06.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '15.06.', '15.08.', '03.10.', '01.11.', '25.12.', '26.12.'],
+    'Berlin':                  ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '03.10.', '25.12.', '26.12.'],
+    'Brandenburg':             ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+    'Bremen':                  ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '03.10.', '25.12.', '26.12.'],
+    'Hamburg':                 ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '03.10.', '25.12.', '26.12.'],
+    'Hessen':                  ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '15.06.', '03.10.', '25.12.', '26.12.'],
+    'Mecklenburg-Vorpommern':  ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+    'Niedersachsen':           ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '03.10.', '25.12.', '26.12.'],
+    'Nordrhein-Westfalen':     ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '15.06.', '03.10.', '01.11.', '25.12.', '26.12.'],
+    'Rheinland-Pfalz':         ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '15.06.', '03.10.', '01.11.', '25.12.', '26.12.'],
+    'Saarland':                ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '15.06.', '15.08.', '03.10.', '01.11.', '25.12.', '26.12.'],
+    'Sachsen':                 ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '15.06.', '03.10.', '31.10.', '22.11.', '25.12.', '26.12.'],
+    'Sachsen-Anhalt':          ['01.01.', '06.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+    'Schleswig-Holstein':      ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '03.10.', '25.12.', '26.12.'],
+    'Thüringen':               ['01.01.', '14.04.', '17.04.', '01.05.', '25.05.', '05.06.', '15.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
 };
 
 const languageStrings = {
@@ -66,8 +67,8 @@ const handlers = {
         if (this.event.session.user.accessToken == undefined) {
 
             // Get the region's next holiday
-            var region = detectBundesland(0);
-            const date = regions[region];
+            const region = detectBundesland(0);
+            const date = detectHoliday(region);
             // Create speech output
             const speechOutput = this.t('GET_FACT_MESSAGE') + region + ' ist am ' + date + '.';
 
@@ -83,8 +84,8 @@ const handlers = {
                     var postalCode = profile.postal_code;
 
                     // Get the region's next holiday
-                    var region = detectBundesland(postalCode);
-                    const date = regions[region];
+                    const region = detectBundesland(postalCode);
+                    const date = detectHoliday(region);
 
                     // Create speech output
                     const speechOutput = that.t('GET_FACT_MESSAGE') + region + ' ist am ' + date + '.';
@@ -111,6 +112,37 @@ const handlers = {
         this.emit(':tell', this.t('STOP_MESSAGE'));
     },
 };
+
+function detectHoliday(region) {
+    const holidays = regions[region];
+    const now = DateFormat(new Date(), "dd.mm.");
+    var result = holidays[0];
+    var date;
+    for (var i = 0; i < holidays.length; ++i) {
+        date = holidays[i];
+        if (date >= now) {
+            result = date;
+            break;
+        }
+    }
+    return replaceMonth(result);
+}
+
+function replaceMonth(str) {
+    str = str.replace('.01.', '.Januar');
+    str = str.replace('.02.', '.Februar');
+    str = str.replace('.03.', '.März');
+    str = str.replace('.04.', '.April');
+    str = str.replace('.05.', '.Mai');
+    str = str.replace('.06.', '.Juni');
+    str = str.replace('.07.', '.Juli');
+    str = str.replace('.08.', '.August');
+    str = str.replace('.09.', '.September');
+    str = str.replace('.10.', '.Oktober');
+    str = str.replace('.11.', '.November');
+    str = str.replace('.12.', '.Dezember');
+    return str;
+}
 
 function detectBundesland(c) {
     if (c >= 1001 && c <= 1936) return 'Sachsen';
