@@ -91,7 +91,7 @@ const handlers = {
                     const speechOutput = that.t('GET_FACT_MESSAGE') + region + ' ist am ' + date + '.';
                     that.emit(':tellWithCard', speechOutput, that.t('SKILL_NAME'), date);
                 } else {
-                    console.error("Got error:", error);
+                    console.error("Got error:", error, ", url: ", profileUrl, ", response: ", response);
                     that.emit(':tell', that.t('ERROR_MESSAGE'));
                 }
             });
@@ -115,13 +115,14 @@ const handlers = {
 
 function detectHoliday(region) {
     const holidays = regions[region];
-    const now = DateFormat(new Date(), "dd.mm.");
+    const now = DateFormat(new Date(), "mmdd");
     var result = holidays[0];
     var date;
     for (var i = 0; i < holidays.length; ++i) {
-        date = holidays[i];
+        // make format mmdd to have the sorting right
+        date = holidays[i].substr(3,2) + holidays[i].substr(0,2);
         if (date >= now) {
-            result = date;
+            result = holidays[i];
             break;
         }
     }
