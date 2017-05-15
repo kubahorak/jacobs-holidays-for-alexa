@@ -1,8 +1,6 @@
-= Jacob's quotes for Amazon Alexa
+= Jacob's holidays for Amazon Alexa
 
-Says one of top 100 Reddit quotes using Amazon Alexa voice service.
-Implemented as an Alexa skill.
-Uses Amazon Lambda service.
+Tells you when is the next public holiday in Germany.
 
 == Installation
 
@@ -13,4 +11,4 @@ Uses Amazon Lambda service.
 Then upload the `pkg.zip` to the AWS Lambda function code.
 Otherwise follow https://github.com/alexa/skill-sample-nodejs-fact[Alexa tutorial].
 
-(C) 2016 Jakub Horák
+(C) 2017 Jakub Horák
