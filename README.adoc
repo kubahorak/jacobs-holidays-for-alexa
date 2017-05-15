@@ -4,6 +4,8 @@ Tells you when is the next public holiday in Germany.
 
 == Installation
 
+Run following commands from the terminal:
+
     cd src
     npm install
     zip -r pkg.zip index.js node_modules
