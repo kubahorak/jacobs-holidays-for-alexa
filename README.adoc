@@ -1,6 +1,7 @@
 = Jacob's holidays for Amazon Alexa
 
-Tells you when is the next public holiday in Germany.
+Tells you when is your next regional public holiday.
+It uses a linked Amazon account to fetch your postal code and moreover the Bundesland, where you live.
 
 == Installation
 
