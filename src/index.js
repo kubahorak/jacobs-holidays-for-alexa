@@ -19,34 +19,55 @@ const APP_ID = 'amzn1.ask.skill.ce8ae59b-efe3-4c0b-a55c-3c83fdc9aeb3';
 const amznProfileUrlBase = 'https://api.amazon.com/user/profile?access_token=';
 
 const regions = {
-    'Deutschland':             ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '25.12.', '26.12.'],
-    'Baden-Württemberg':       ['01.01.', '06.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '01.11.', '25.12.', '26.12.'],
-    'Bayern':                  ['01.01.', '06.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '15.08.', '03.10.', '01.11.', '25.12.', '26.12.'],
-    'Berlin':                  ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '25.12.', '26.12.'],
-    'Brandenburg':             ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
-    'Bremen':                  ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '25.12.', '26.12.'],
-    'Hamburg':                 ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '25.12.', '26.12.'],
-    'Hessen':                  ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '25.12.', '26.12.'],
-    'Mecklenburg-Vorpommern':  ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
-    'Niedersachsen':           ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '25.12.', '26.12.'],
-    'Nordrhein-Westfalen':     ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '01.11.', '25.12.', '26.12.'],
-    'Rheinland-Pfalz':         ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '01.11.', '25.12.', '26.12.'],
-    'Saarland':                ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '15.08.', '03.10.', '01.11.', '25.12.', '26.12.'],
-    'Sachsen':                 ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '31.10.', '22.11.', '25.12.', '26.12.'],
-    'Sachsen-Anhalt':          ['01.01.', '06.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
-    'Schleswig-Holstein':      ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '25.12.', '26.12.'],
-    'Thüringen':               ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
+    '2018': {
+        'Deutschland':             ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '25.12.', '26.12.'],
+        'Baden-Württemberg':       ['01.01.', '06.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '01.11.', '25.12.', '26.12.'],
+        'Bayern':                  ['01.01.', '06.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '15.08.', '03.10.', '01.11.', '25.12.', '26.12.'],
+        'Berlin':                  ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '25.12.', '26.12.'],
+        'Brandenburg':             ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Bremen':                  ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Hamburg':                 ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Hessen':                  ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '25.12.', '26.12.'],
+        'Mecklenburg-Vorpommern':  ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Niedersachsen':           ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Nordrhein-Westfalen':     ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '01.11.', '25.12.', '26.12.'],
+        'Rheinland-Pfalz':         ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '01.11.', '25.12.', '26.12.'],
+        'Saarland':                ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '15.08.', '03.10.', '01.11.', '25.12.', '26.12.'],
+        'Sachsen':                 ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '31.10.', '21.11.', '25.12.', '26.12.'],
+        'Sachsen-Anhalt':          ['01.01.', '06.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Schleswig-Holstein':      ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Thüringen':               ['01.01.', '30.03.', '02.04.', '01.05.', '10.05.', '21.05.', '31.05.', '03.10.', '31.10.', '25.12.', '26.12.'],
+    },
+    '2019': {
+        'Deutschland':             ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '03.10.', '25.12.', '26.12.'],
+        'Baden-Württemberg':       ['01.01.', '06.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '20.06.', '03.10.', '01.11.', '25.12.', '26.12.'],
+        'Bayern':                  ['01.01.', '06.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '20.06.', '15.08.', '03.10.', '01.11.', '25.12.', '26.12.'],
+        'Berlin':                  ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '03.10.', '25.12.', '26.12.'],
+        'Brandenburg':             ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Bremen':                  ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Hamburg':                 ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Hessen':                  ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '20.06.', '03.10.', '25.12.', '26.12.'],
+        'Mecklenburg-Vorpommern':  ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Niedersachsen':           ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Nordrhein-Westfalen':     ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '20.06.', '03.10.', '01.11.', '25.12.', '26.12.'],
+        'Rheinland-Pfalz':         ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '20.06.', '03.10.', '01.11.', '25.12.', '26.12.'],
+        'Saarland':                ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '20.06.', '15.08.', '03.10.', '01.11.', '25.12.', '26.12.'],
+        'Sachsen':                 ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '20.06.', '03.10.', '31.10.', '20.11.', '25.12.', '26.12.'],
+        'Sachsen-Anhalt':          ['01.01.', '06.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Schleswig-Holstein':      ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+        'Thüringen':               ['01.01.', '19.04.', '22.04.', '01.05.', '30.05.', '10.06.', '20.06.', '03.10.', '31.10.', '25.12.', '26.12.'],
+    },
 };
 
 const languageStrings = {
     'de-DE': {
         translation: {
-            SKILL_NAME: 'Feiertag',
+            SKILL_NAME: 'Der nächste Feiertag in ',
             GET_FACT_MESSAGE: 'Der nächste gesetzliche Feiertag in ',
             HELP_MESSAGE: 'Du kannst sagen, „Wann ist der nächste Feiertag“, oder du kannst „Beenden“ sagen... Wie kann ich dir helfen?',
             HELP_REPROMPT: 'Wie kann ich dir helfen?',
             STOP_MESSAGE: 'Auf Wiedersehen!',
-            LINK_MESSAGE: 'Bitte verwenden Sie die Begleit-App, um auf Amazon zu authentifizieren und deshalb Ihr Bundesland zu angeben.',
+            LINK_MESSAGE: 'Bitte verwenden Sie die Begleit-App, um auf Amazon zu authentifizieren und deshalb Ihr Bundesland anzugeben.',
             ERROR_MESSAGE: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
         },
     },
@@ -70,7 +91,7 @@ const handlers = {
             const region = detectBundesland(0);
             const date = detectHoliday(region);
             // Create speech output
-            const speechOutput = this.t('GET_FACT_MESSAGE') + region + ' ist am ' + date + '.';
+            const speechOutput = this.t('GET_FACT_MESSAGE') + region + ' ist ' + date + '.';
 
             this.emit(':tellWithLinkAccountCard', speechOutput + ' ' + this.t('LINK_MESSAGE'));
         } else {
@@ -88,8 +109,8 @@ const handlers = {
                     const date = detectHoliday(region);
 
                     // Create speech output
-                    const speechOutput = that.t('GET_FACT_MESSAGE') + region + ' ist am ' + date + '.';
-                    that.emit(':tellWithCard', speechOutput, that.t('SKILL_NAME'), date);
+                    const speechOutput = that.t('GET_FACT_MESSAGE') + region + ' ist ' + date + '.';
+                    that.emit(':tellWithCard', speechOutput, that.t('SKILL_NAME') + region, date);
                 } else {
                     console.error("Got error:", error, ", url: ", profileUrl, ", response: ", response);
                     that.emit(':tell', that.t('ERROR_MESSAGE'));
@@ -114,35 +135,53 @@ const handlers = {
 };
 
 function detectHoliday(region) {
-    const holidays = regions[region];
-    const now = DateFormat(new Date(), "mmdd");
+    const now = new Date();
+    const year = now.getFullYear().toString();
+    const holidays = regions[year][region];
+    const today = DateFormat(now, "mmdd");
     var result = holidays[0];
     var date;
     for (var i = 0; i < holidays.length; ++i) {
         // make format mmdd to have the sorting right
         date = holidays[i].substr(3,2) + holidays[i].substr(0,2);
-        if (date >= now) {
+        if (date >= today) {
             result = holidays[i];
             break;
         }
     }
-    return replaceMonth(result);
+    // prepend the day of the week
+    const holiday = new Date(year + '-' + result.substr(3,2) + '-' + result.substr(0,2));
+    const dow = getDayOfWeek(holiday);
+    return 'am ' + dow + ', dem ' + replaceMonth(result);
 }
 
 function replaceMonth(str) {
-    str = str.replace('.01.', '.Januar');
-    str = str.replace('.02.', '.Februar');
-    str = str.replace('.03.', '.März');
-    str = str.replace('.04.', '.April');
-    str = str.replace('.05.', '.Mai');
-    str = str.replace('.06.', '.Juni');
-    str = str.replace('.07.', '.Juli');
-    str = str.replace('.08.', '.August');
-    str = str.replace('.09.', '.September');
-    str = str.replace('.10.', '.Oktober');
-    str = str.replace('.11.', '.November');
-    str = str.replace('.12.', '.Dezember');
+    str = str.replace('.01.', '. Januar');
+    str = str.replace('.02.', '. Februar');
+    str = str.replace('.03.', '. März');
+    str = str.replace('.04.', '. April');
+    str = str.replace('.05.', '. Mai');
+    str = str.replace('.06.', '. Juni');
+    str = str.replace('.07.', '. Juli');
+    str = str.replace('.08.', '. August');
+    str = str.replace('.09.', '. September');
+    str = str.replace('.10.', '. Oktober');
+    str = str.replace('.11.', '. November');
+    str = str.replace('.12.', '. Dezember');
     return str;
+}
+
+function getDayOfWeek(date) {
+    switch (date.getDay()) {
+        case 0: return 'Sonntag';
+        case 1: return 'Montag';
+        case 2: return 'Dienstag';
+        case 3: return 'Mittwoch';
+        case 4: return 'Donnerstag';
+        case 5: return 'Freitag';
+        case 6: return 'Samstag';
+        default: return '';
+    }
 }
 
 function detectBundesland(c) {
