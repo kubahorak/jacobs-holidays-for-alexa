@@ -1,23 +1,24 @@
 {
-    "name": "jacobs-holidays-for-alexa",
-    "version": "1.0.0",
-    "private": true,
-    "description": "I18n version of fact skill.",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [
-        "alexa",
-        "skill",
-        "fact",
-        "holidays"
-    ],
-    "author": "Jakub Horák",
-    "license": "MIT",
-    "dependencies": {
-        "alexa-sdk": "^1.0.25",
-        "request": "^2.88.0",
-        "dateformat": "^3.0.3"
-    }
+  "name": "jacobs-holidays-for-alexa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "I18n version of fact skill.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "alexa",
+    "skill",
+    "fact",
+    "holidays"
+  ],
+  "author": "Jakub Horák",
+  "license": "MIT",
+  "dependencies": {
+    "ask-sdk-core": "^2.0.0",
+    "ask-sdk-model": "^1.0.0",
+    "axios": "^0.18.0",
+    "dateformat": "^3.0.3"
+  }
 }

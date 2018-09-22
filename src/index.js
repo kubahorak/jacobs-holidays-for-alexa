@@ -10,13 +10,11 @@
 
 'use strict';
 
-const Alexa = require('alexa-sdk');
-const Request = require('request');
+const Alexa = require('ask-sdk-core');
+const Axios = require('axios');
 const DateFormat = require('dateformat');
 
-const APP_ID = 'amzn1.ask.skill.ce8ae59b-efe3-4c0b-a55c-3c83fdc9aeb3';
-
-const amznProfileUrlBase = 'https://api.amazon.com/user/profile?access_token=';
+const PERMISSIONS = ['read::alexa:device:all:address:country_and_postal_code'];
 
 const regions = {
     '2018': {
@@ -59,78 +57,181 @@ const regions = {
     },
 };
 
-const languageStrings = {
-    'de-DE': {
-        translation: {
-            SKILL_NAME: 'Der nächste Feiertag in ',
-            GET_FACT_MESSAGE: 'Der nächste gesetzliche Feiertag in ',
-            HELP_MESSAGE: 'Du kannst sagen, „Wann ist der nächste Feiertag“, oder du kannst „Beenden“ sagen... Wie kann ich dir helfen?',
-            HELP_REPROMPT: 'Wie kann ich dir helfen?',
-            STOP_MESSAGE: 'Auf Wiedersehen!',
-            LINK_MESSAGE: 'Bitte verwenden Sie die Begleit-App, um auf Amazon zu authentifizieren und deshalb Ihr Bundesland anzugeben.',
-            ERROR_MESSAGE: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
-        },
+const SKILL_NAME = 'Der nächste Feiertag in ';
+const GET_FACT_MESSAGE = 'Der nächste gesetzliche Feiertag in ';
+const NOTIFY_MISSING_PERMISSIONS = 'Bitte aktivieren Sie die Standortberechtigungen in der Alexa App.';
+const NO_POSTAL_CODE_MESSAGE = 'Bitte verwenden Sie die Alexa App, um Ihre Postleitanzahl anzugeben.';
+const HELP_MESSAGE = 'Du kannst sagen, „Wann ist der nächste Feiertag“, oder du kannst „Beenden“ sagen... Wie kann ich dir helfen?';
+const HELP_REPROMPT = 'Wie kann ich dir helfen?';
+const FALLBACK_MESSAGE = 'Feiertag kann dir damit nicht helfen.';
+const FALLBACK_REPROMPT = 'Was kann ich dir helfen?';
+const STOP_MESSAGE = 'Auf Wiedersehen!';
+const ERROR_MESSAGE = 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.';
+
+const amznProfileUrlBase = 'https://api.amazon.com/user/profile?access_token=';
+
+const GetNewFactHandler = {
+    canHandle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'LaunchRequest'
+            || (request.type === 'IntentRequest'
+                && request.intent.name === 'GetNewFactIntent');
     },
-};
+    async handle(handlerInput) {
+        const { requestEnvelope, serviceClientFactory, responseBuilder } = handlerInput;
 
-const handlers = {
-    'LaunchRequest': function () {
-        this.emit('GetFact');
-    },
-    'GetNewFactIntent': function () {
-        this.emit('GetFact');
-    },
-    'GetFact': function () {
+        const consentToken = requestEnvelope.context.System.user.permissions
+            && requestEnvelope.context.System.user.permissions.consentToken;
+        if (!consentToken) {
 
-        console.log('Event: ' + JSON.stringify(this.event));
+            // Try using the legacy account linking
+            if (requestEnvelope.session.user.accessToken != undefined) {
 
-        // if no amazon token, return a LinkAccount card
-        if (this.event.session.user.accessToken == undefined) {
-
-            // Get the region's next holiday
-            const region = detectBundesland(0);
-            const date = detectHoliday(region);
-            // Create speech output
-            const speechOutput = this.t('GET_FACT_MESSAGE') + region + ' ist ' + date + '.';
-
-            this.emit(':tellWithLinkAccountCard', speechOutput + ' ' + this.t('LINK_MESSAGE'));
-        } else {
-
-            var profileUrl = amznProfileUrlBase + this.event.session.user.accessToken;
-            var that = this;
-            Request(profileUrl, function(error, response, body) {
-                if (response.statusCode == 200) {
-                    console.log("Got profile:", body);
-                    var profile = JSON.parse(body);
-                    var postalCode = profile.postal_code;
+                const profileUrl = amznProfileUrlBase + requestEnvelope.session.user.accessToken;
+                try {
+                    const profile = await Axios.get(profileUrl);
+                    const postalCode = profile.data.postal_code;
+                    console.log('Got postal code from linked profile', postalCode);
 
                     // Get the region's next holiday
                     const region = detectBundesland(postalCode);
                     const date = detectHoliday(region);
 
                     // Create speech output
-                    const speechOutput = that.t('GET_FACT_MESSAGE') + region + ' ist ' + date + '.';
-                    that.emit(':tellWithCard', speechOutput, that.t('SKILL_NAME') + region, date);
-                } else {
-                    console.error("Got error:", error, ", url: ", profileUrl, ", response: ", response);
-                    that.emit(':tell', that.t('ERROR_MESSAGE'));
+                    const speechOutput = GET_FACT_MESSAGE + region + ' ist ' + date + '.';
+                    return responseBuilder
+                        .speak(speechOutput)
+                        .withSimpleCard(SKILL_NAME + region, date)
+                        .getResponse();
+                } catch (error) {
+                    console.error('Got error when fetching linked profile:', error, ', url: ', profileUrl);
                 }
-            });
+            }
+
+            console.log('Using default because no info');
+
+            // Get the default next holiday
+            const region = detectBundesland(0);
+            const date = detectHoliday(region);
+            // Create speech output
+            const speechOutput = GET_FACT_MESSAGE + region + ' ist ' + date + '. ' + NOTIFY_MISSING_PERMISSIONS;
+            return responseBuilder
+                .speak(speechOutput)
+                .withAskForPermissionsConsentCard(PERMISSIONS)
+                .getResponse();
+        }
+        try {
+            const { deviceId } = requestEnvelope.context.System.device;
+            const deviceAddressServiceClient = serviceClientFactory.getDeviceAddressServiceClient();
+            const address = await deviceAddressServiceClient.getCountryAndPostalCode(deviceId);
+
+            // if no postal code available, return basic response asking for more data
+            if (address.postalCode === null) {
+
+                console.log('Using default because no postal code entered');
+
+                // Get the default next holiday
+                const region = detectBundesland(0);
+                const date = detectHoliday(region);
+                // Create speech output
+                const speechOutput = GET_FACT_MESSAGE + region + ' ist ' + date + '. ' + NO_POSTAL_CODE_MESSAGE;
+
+                return responseBuilder
+                    .speak(speechOutput)
+                    .withSimpleCard(SKILL_NAME + region, date)
+                    .getResponse();
+            } else {
+
+                console.log('Address successfully retrieved', address);
+
+                // Get the region's next holiday
+                const region = detectBundesland(address.postalCode);
+                const date = detectHoliday(region);
+
+                // Create speech output
+                const speechOutput = GET_FACT_MESSAGE + region + ' ist ' + date + '.';
+                return responseBuilder
+                    .speak(speechOutput)
+                    .withSimpleCard(SKILL_NAME + region, date)
+                    .getResponse();
+            }
+        } catch (error) {
+            console.error('Got error:', error);
+            if (error.name !== 'ServiceError') {
+                return responseBuilder.speak(ERROR_MESSAGE).getResponse();
+            }
+            throw error;
         }
     },
-    'AMAZON.HelpIntent': function () {
-        const speechOutput = this.t('HELP_MESSAGE');
-        const reprompt = this.t('HELP_MESSAGE');
-        this.emit(':ask', speechOutput, reprompt);
+};
+
+const HelpHandler = {
+    canHandle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'IntentRequest'
+            && request.intent.name === 'AMAZON.HelpIntent';
     },
-    'AMAZON.CancelIntent': function () {
-        this.emit(':tell', this.t('STOP_MESSAGE'));
+    handle(handlerInput) {
+        return handlerInput.responseBuilder
+            .speak(HELP_MESSAGE)
+            .reprompt(HELP_REPROMPT)
+            .getResponse();
     },
-    'AMAZON.StopIntent': function () {
-        this.emit(':tell', this.t('STOP_MESSAGE'));
+};
+
+const FallbackHandler = {
+    // 2018-May-01: AMAZON.FallbackIntent is only currently available in en-US locale.
+    //              This handler will not be triggered except in that locale, so it can be
+    //              safely deployed for any locale.
+    canHandle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'IntentRequest'
+            && request.intent.name === 'AMAZON.FallbackIntent';
     },
-    'SessionEndedRequest': function () {
-        this.emit(':tell', this.t('STOP_MESSAGE'));
+    handle(handlerInput) {
+        return handlerInput.responseBuilder
+            .speak(FALLBACK_MESSAGE)
+            .reprompt(FALLBACK_REPROMPT)
+            .getResponse();
+    },
+};
+
+const ExitHandler = {
+    canHandle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'IntentRequest'
+            && (request.intent.name === 'AMAZON.CancelIntent'
+                || request.intent.name === 'AMAZON.StopIntent');
+    },
+    handle(handlerInput) {
+        return handlerInput.responseBuilder
+            .speak(STOP_MESSAGE)
+            .getResponse();
+    },
+};
+
+const SessionEndedRequestHandler = {
+    canHandle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'SessionEndedRequest';
+    },
+    handle(handlerInput) {
+        console.log(`Session ended with reason: ${handlerInput.requestEnvelope.request.reason}`);
+
+        return handlerInput.responseBuilder.getResponse();
+    },
+};
+
+const ErrorHandler = {
+    canHandle() {
+        return true;
+    },
+    handle(handlerInput, error) {
+        console.log(`Error handled: ${error.message}`);
+
+        return handlerInput.responseBuilder
+            .speak(ERROR_MESSAGE)
+            .getResponse();
     },
 };
 
@@ -138,7 +239,7 @@ function detectHoliday(region) {
     const now = new Date();
     const year = now.getFullYear().toString();
     const holidays = regions[year][region];
-    const today = DateFormat(now, "mmdd");
+    const today = DateFormat(now, 'mmdd');
     var result = holidays[0];
     var date;
     for (var i = 0; i < holidays.length; ++i) {
@@ -384,11 +485,16 @@ function detectBundesland(c) {
     return 'Deutschland';
 }
 
-exports.handler = (event, context) => {
-    const alexa = Alexa.handler(event, context);
-    alexa.appId = APP_ID;
-    // To enable string internationalization (i18n) features, set a resources object.
-    alexa.resources = languageStrings;
-    alexa.registerHandlers(handlers);
-    alexa.execute();
-};
+const skillBuilder = Alexa.SkillBuilders.custom();
+
+exports.handler = skillBuilder
+    .addRequestHandlers(
+        GetNewFactHandler,
+        HelpHandler,
+        ExitHandler,
+        FallbackHandler,
+        SessionEndedRequestHandler
+    )
+    .addErrorHandlers(ErrorHandler)
+    .withApiClient(new Alexa.DefaultApiClient())
+    .lambda();
