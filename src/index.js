@@ -237,23 +237,25 @@ const ErrorHandler = {
 
 function detectHoliday(region) {
     const now = new Date();
-    const year = now.getFullYear().toString();
-    const holidays = regions[year][region];
+    const year = now.getFullYear();
+    const holidays = regions[year.toString()][region];
     const today = DateFormat(now, 'mmdd');
-    var result = holidays[0];
+    var resultDate = holidays[0];
+    var resultYear = year + 1;
     var date;
     for (var i = 0; i < holidays.length; ++i) {
         // make format mmdd to have the sorting right
         date = holidays[i].substr(3,2) + holidays[i].substr(0,2);
         if (date >= today) {
-            result = holidays[i];
+            resultDate = holidays[i];
+            resultYear = year;
             break;
         }
     }
     // prepend the day of the week
-    const holiday = new Date(year + '-' + result.substr(3,2) + '-' + result.substr(0,2));
+    const holiday = new Date(resultYear.toString() + '-' + resultDate.substr(3,2) + '-' + resultDate.substr(0,2));
     const dow = getDayOfWeek(holiday);
-    return 'am ' + dow + ', dem ' + replaceMonth(result);
+    return 'am ' + dow + ', dem ' + replaceMonth(resultDate);
 }
 
 function replaceMonth(str) {
