@@ -242,16 +242,16 @@ function detectHoliday(region) {
     const today = DateFormat(now, 'mmdd');
     var resultDate = holidays[0];
     var resultYear = year + 1;
-    var date;
+    var dow;
     for (var i = 0; i < holidays.length; ++i) {
         // make format mmdd to have the sorting right
-        date = holidays[i].substr(3,2) + holidays[i].substr(0,2);
+        const date = holidays[i].substr(3,2) + holidays[i].substr(0,2);
         if (date >= today) {
             resultDate = holidays[i];
             resultYear = year;
             // prepend the day of the week
             const holiday = new Date(resultYear.toString() + '-' + resultDate.substr(3,2) + '-' + resultDate.substr(0,2));
-            const dow = getDayOfWeek(holiday);
+            dow = getDayOfWeek(holiday);
             // skip Sundays
             if (dow != 'Sonntag') {
                 break;

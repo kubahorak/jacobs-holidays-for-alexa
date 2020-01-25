@@ -7,9 +7,9 @@ It uses a linked Amazon account to fetch your postal code and moreover the Bunde
 
 Run following commands from the terminal:
 
-    chmod -R 755 src
     cd src
     npm install
+    chmod -R 755 .
     zip -r pkg.zip index.js node_modules
 
 Then upload the `pkg.zip` to the AWS Lambda function code.
