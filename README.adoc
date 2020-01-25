@@ -15,4 +15,6 @@ Run following commands from the terminal:
 Then upload the `pkg.zip` to the AWS Lambda function code.
 Otherwise follow https://github.com/alexa/skill-sample-nodejs-fact[Alexa tutorial].
 
+Remember to update the *live* alias on the Lambda function.
+
 (C) 2020 Jakub Horák
