@@ -16,7 +16,7 @@
   "author": "Jakub Horák",
   "license": "MIT",
   "dependencies": {
-    "ask-sdk-core": "2.10.2",
+    "ask-sdk-core": "2.11.0",
     "ask-sdk-model": "1.37.1",
     "axios": "0.24.0",
     "dateformat": "5.0.2"
