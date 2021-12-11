@@ -10,7 +10,7 @@ Run following commands from the terminal:
     cd src
     npm install
     chmod -R 755 .
-    zip -r pkg.zip index.js node_modules
+    zip -r pkg.zip index.js package.json node_modules
 
 Then upload the `pkg.zip` to the AWS Lambda function code.
 Otherwise follow https://github.com/alexa/skill-sample-nodejs-fact[Alexa tutorial].

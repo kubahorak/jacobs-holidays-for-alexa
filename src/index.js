@@ -10,9 +10,9 @@
 
 'use strict';
 
-const Alexa = require('ask-sdk-core');
-const Axios = require('axios');
-const DateFormat = require('dateformat');
+import Alexa from 'ask-sdk-core';
+import Axios from 'axios';
+import DateFormat from 'dateformat';
 
 const PERMISSIONS = ['read::alexa:device:all:address:country_and_postal_code'];
 
@@ -530,7 +530,7 @@ function detectBundesland(c) {
 
 const skillBuilder = Alexa.SkillBuilders.custom();
 
-exports.handler = skillBuilder
+export const handler = skillBuilder
     .addRequestHandlers(
         GetNewFactHandler,
         HelpHandler,
