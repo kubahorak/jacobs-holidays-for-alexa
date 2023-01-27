@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "ask-sdk-core": "2.12.1",
-    "ask-sdk-model": "1.43.0",
+    "ask-sdk-model": "1.44.0",
     "axios": "1.2.5",
     "dateformat": "5.0.3"
   }
