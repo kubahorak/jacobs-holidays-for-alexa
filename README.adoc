@@ -17,4 +17,4 @@ Otherwise follow https://github.com/alexa/skill-sample-nodejs-fact[Alexa tutoria
 
 Remember to update the *live* alias on the Lambda function.
 
-(C) 2024 Jakub Horák
+(C) 2025 Jakub Horák
