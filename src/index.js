@@ -278,23 +278,27 @@ function detectHoliday(region) {
     const year = now.getFullYear();
     const holidays = regions[year.toString()][region];
     const today = DateFormat(now, 'mmdd');
-    var resultDate = holidays[0];
-    var resultYear = year + 1;
+    var resultDate;
     var dow;
     for (var i = 0; i < holidays.length; ++i) {
         // make format mmdd to have the sorting right
         const date = holidays[i].substr(3,2) + holidays[i].substr(0,2);
         if (date >= today) {
-            resultDate = holidays[i];
-            resultYear = year;
             // prepend the day of the week
-            const holiday = new Date(resultYear.toString() + '-' + resultDate.substr(3,2) + '-' + resultDate.substr(0,2));
-            dow = getDayOfWeek(holiday);
+            const holiday = new Date(year.toString() + '-' + holidays[i].substr(3,2) + '-' + holidays[i].substr(0,2));
+            const holidayDow = getDayOfWeek(holiday);
             // skip Sundays
-            if (dow != 'Sonntag') {
+            if (holidayDow != 'Sonntag') {
+                resultDate = holidays[i];
+                dow = holidayDow;
                 break;
             }
         }
+    }
+    // nothing left this year, so the next one is New Year's Day
+    if (resultDate === undefined) {
+        resultDate = '01.01.';
+        dow = getDayOfWeek(new Date((year + 1).toString() + '-01-01'));
     }
     return 'am ' + dow + ', dem ' + replaceMonth(resultDate);
 }
